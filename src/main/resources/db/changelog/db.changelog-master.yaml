@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - include:
+      file: migrations/create-table.xml
+      relativeToChangeLogFile: true
+  - include:
+      file: migrations/add-users.xml
+      relativeToChangeLogFile: true
