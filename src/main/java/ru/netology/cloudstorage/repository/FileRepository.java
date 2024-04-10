@@ -15,8 +15,13 @@ public interface FileRepository extends JpaRepository<FileEntity, String> {
     List<FileEntity> getFiles(int limit);
 
     @Modifying
-    @Query(value = "UPDATE files f SET f.filename = :newFilename where f.filename = :oldFilename",
+    @Query(value = "UPDATE files SET file_name = :newFilename where file_name = :oldFilename",
             nativeQuery = true)
-    void renameFile(@Param("newFilename") String newFilename,
-                    @Param("oldFilename") String oldFilename);
+    void renameFile(@Param("oldFilename") String oldFilename,
+                    @Param("newFilename") String newFilename);
 }
+
+
+
+
+

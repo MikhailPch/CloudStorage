@@ -1,7 +1,6 @@
 package ru.netology.cloudstorage.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -15,10 +14,9 @@ import ru.netology.cloudstorage.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
+@Slf4j
 @Service
 public class AuthorizationService {
-    private final Logger logger = LoggerFactory.getLogger(AuthorizationService.class);
 
     private final UserRepository userRepository;
     private final Random random = new Random();
@@ -38,19 +36,20 @@ public class AuthorizationService {
         }
         final String authToken = String.valueOf(random.nextLong());
         listTokens.add(authToken);
-        logger.info("User " + login + " entered with token " + authToken);
+        log.info("User " + login + " entered with token " + authToken);
         return new ResponseEntity<>(new AuthResponse(authToken), HttpStatus.OK);
     }
 
 
     public void logoutUser(String authToken) {
         listTokens.remove(authToken);
+        log.info("user's token " + authToken + " has been deleted");
     }
 
     public void checkToken(String authToken) {
         if (!listTokens.contains(authToken)) {
             throw new AuthorizationException();
-        }
+        } log.info("token " + authToken + " has been successfully verified");
     }
 
 }

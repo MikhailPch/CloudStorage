@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.netology.cloudstorage.dto.FileRequest;
 import ru.netology.cloudstorage.dto.FileResponse;
+import ru.netology.cloudstorage.entities.FileEntity;
 import ru.netology.cloudstorage.service.AuthorizationService;
 import ru.netology.cloudstorage.service.FileService;
 
@@ -16,6 +17,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/")
@@ -33,7 +35,12 @@ public class FileController {
     public ResponseEntity<List<FileResponse>> getFileList(@RequestHeader("auth-token") @NotBlank String authToken,
                                                           @RequestParam @Min(1) int limit) {
         authorizationService.checkToken(authToken);
-        return ResponseEntity.ok(fileService.getFileList(limit));
+        List<FileEntity> files = fileService.getFileList(limit);
+        List<FileResponse> filesResponse = files.stream()
+                .map(file -> new FileResponse(file.getFileName(), file.getFileContent().length))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(filesResponse);
     }
 
     @GetMapping("/file")
